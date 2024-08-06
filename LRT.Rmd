@@ -1,0 +1,39 @@
+---
+title: "lrt"
+output: html_document
+date: "2024-07-18"
+---
+
+```{r}
+library(dplyr)
+
+#Read the data from the the file containing results from the codon_ml script (edit depending on what dataset analysing)
+results = read.csv("/Users/emilydunican/Desktop/results_growth.csv")
+```
+
+
+```{r}
+#Function to calculate the p-value using the likelihood ratio test
+calculate_p_value = function(logLik_simpler, logLik_complex, params_simpler, params_complex) {
+  LR = 2 * (logLik_complex - logLik_simpler)
+  df = params_complex - params_simpler
+  p_value = pchisq(LR, df, lower.tail = FALSE)
+  return(p_value)
+}
+
+#m0_ml corresponds to the simpler model and m1_ml to the complex model
+params_simpler <- 3 # Where beta1 forced to be zero 
+params_complex <- 4 # Where beta1 is estimated 
+
+#Apply the likelihood ratio test to each gene and extract only p-values
+p_values <- results %>%
+  mutate(p_value = mapply(calculate_p_value, m0_ml, m1_ml, MoreArgs = list(params_simpler, params_complex))) %>%
+  select(seqfile, p_value) %>%
+  arrange(p_value)
+
+#Write the p-values to a new CSV file
+write.csv(p_values, "/Users/emilydunican/Desktop/results_with_pvalues_bw.csv", row.names = FALSE)
+
+
+```
+

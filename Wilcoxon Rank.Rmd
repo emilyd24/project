@@ -1,0 +1,39 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-07-26"
+---
+```{r}
+#Define the p-values for the two sets of genes
+p_values_DNA = c(
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3.67e-274, 1.17e-180, 1.66e-104, 3.06e-72,
+  1.39e-39, 1.96e-39, 2.52e-20, 4.42e-14, 0.526743847, 0.705011232, 1
+)
+p_values_Housekeeping = c(
+  0, 0, 1.55e-185, 5.16e-158, 2.26e-50, 1.13e-34, 1.19e-16, 5.12e-15, 1.09e-14,
+  1.34e-11, 3.49e-07, 0.00031891, 0.000754131, 0.001746211, 0.040557448,
+  0.094911419, 0.097972499, 0.195432325, 0.509959202, 1
+)
+
+# Perform the Wilcoxon rank-sum test
+wilcox.test(p_values_DNA, p_values_Housekeeping, alternative = "two.sided")
+
+```
+
+```{r}
+# Define the p-values for the two sets of genes
+housekeeping_bw_p_values = c(
+  0, 0, 0, 0, 0, 0, 0, 0, 3.74E-207, 8.99E-197, 6.24E-83, 1.44E-52, 
+  2.44E-33, 1.15E-14, 5.20E-05, 0.007780128, 1, 1, 1, 1, 1
+)
+growth_hormone_p_values = c(
+  0, 0, 8.102295213E-315, 5.02E-244, 2.85E-224, 1.33E-203, 2.71E-181, 4.26E-82, 
+  4.91E-80, 2.60E-60, 4.68E-52, 2.80E-50, 7.72E-48, 1.08E-35, 1.68E-32, 1.01E-21, 
+  6.85E-07, 1, 1, 1, 1
+)
+
+# Perform the Wilcoxon rank-sum test
+wilcox.test(housekeeping_bw_p_values, growth_hormone_p_values, alternative = "two.sided")
+
+```
+

@@ -1,0 +1,92 @@
+---
+title: "Density Plots"
+output: html_document
+date: "2024-07-25"
+---
+
+```{r}
+library(ggplot2)
+
+#Beta1 values for DNA repair genes
+dna_genes = c(
+  5.89E-05, 7.48E-05, 0.000326117, -0.000118736, -3.14E-05, 1.86E-07, 0.008399662, 
+  0.000105011, -0.000195254, -5.18E-05, -9.10E-05, 1.05E-05, 0.000378954, -0.000666103, 
+  0.000301074, 7.66E-05, 0.000522611, 0.000512572, 7.07E-05, -0.000129812
+)
+
+#Beta1 values for Housekeeping genes
+housekeeping_genes = c(
+  0.000152248, 2.97E-06, -7.84E-06, 0.000101997, 3.32E-05, -2.70E-05, -9.54E-05, 
+  -2.16E-05, 0.000218304, 4.43E-05, 4.65E-05, -7.11E-05, -0.001347022, -3.68E-05, 
+  -1.51E-05, 3.46E-05, -9.21E-05, 0.000513454, 1.31E-05, -0.000430703
+)
+
+#Create a data frame with both sets of values
+data = data.frame(
+  value = c(dna_genes, housekeeping_genes),
+  gene_type = rep(c("DNA Repair Genes", "Housekeeping Genes"), each = length(dna_genes))
+)
+
+# Create the density plot
+ggplot(data, aes(x = value, fill = gene_type)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Density Plot of Beta1 Values",
+       x = "Beta1",
+       y = "Density",
+       fill = "Gene Type") +
+  xlim(c(-0.0015, 0.009)) + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.title = element_text(face = "bold"), 
+    axis.title.y = element_text(margin = margin(r = 10)), 
+    legend.title = element_text(face = "bold"), 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank()  
+  )
+
+```
+```{r}
+
+
+#Beta1 values for DNA repair genes
+dna_genes <- c(
+  5.89E-05, 7.48E-05, 0.000326117, -0.000118736, -3.14E-05, 1.86E-07, 0.008399662, 
+  0.000105011, -0.000195254, -5.18E-05, -9.10E-05, 1.05E-05, 0.000378954, -0.000666103, 
+  0.000301074, 7.66E-05, 0.000522611, 0.000512572, 7.07E-05, -0.000129812
+)
+
+#Beta1 values for Housekeeping genes
+housekeeping_genes <- c(
+  0.000152248, 2.97E-06, -7.84E-06, 0.000101997, 3.32E-05, -2.70E-05, -9.54E-05, 
+  -2.16E-05, 0.000218304, 4.43E-05, 4.65E-05, -7.11E-05, -0.001347022, -3.68E-05, 
+  -1.51E-05, 3.46E-05, -9.21E-05, 0.000513454, 1.31E-05, -0.000430703
+)
+
+# Create a data frame with both sets of values
+data = data.frame(
+  value = c(dna_genes, housekeeping_genes),
+  gene_type = rep(c("DNA Repair Genes", "Housekeeping Genes"), each = length(dna_genes))
+)
+
+# Create the density plot 
+ggplot(data, aes(x = value, fill = gene_type)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("red", "blue")) + 
+  labs(title = "Density Plot of Beta1 Values",
+       x = "Beta1 Value",
+       y = "Density",
+       fill = "Gene Type") +
+  xlim(c(-0.0015, 0.009)) + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"), 
+    axis.title = element_text(face = "bold"), 
+    axis.title.y = element_text(margin = margin(r = 10)), 
+    legend.title = element_text(face = "bold"), 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank()  
+  )
+
+```
+

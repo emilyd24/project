@@ -1,0 +1,130 @@
+---
+title: "Dot Plots"
+output: html_document
+date: "2024-08-06"
+---
+```{r}
+library(ggplot2)
+library(dplyr)
+
+#Data from DNA repair genes
+dna_repair_genes <- data.frame(
+  seqfile = c("142_PARP1.fasta", "2177_FANCD2.fasta", "2956_MSH6.fasta", "4361_MRE11.fasta", "4436_MSH2.fasta", 
+              "672_BRCA1.fasta", "7507_XPA.fasta", "7515_XRCC1.fasta", "8930_MBD4.fasta", "7518_XRCC4.fasta", 
+              "4437_MSH3.fasta", "2067_ERCC1.fasta", "7157_TP53.fasta", "4968_OGG1.fasta", "5893_RAD52.fasta", 
+              "79661_NEIL1.fasta", "328_APEX1.fasta", "5888_RAD51.fasta", "4595_MUTYH.fasta", "3981_LIG4.fasta"),
+  p_value = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 3.66712124140229E-274, 1.17116005528756E-180, 1.66004944806584E-104, 
+              3.05967550867565E-72, 1.39066021028716E-39, 1.95909219183251E-39, 2.52426818860102E-20, 4.42204896475734E-14, 
+              0.526743846691743, 0.705011231814973, 1),
+  category = "DNA Repair"
+)
+
+#Data from housekeeping genes
+housekeeping_genes <- data.frame(
+  seqfile = c("60_ACTB.fasta", "7534_YWHAZ.fasta", "5230_PGK1.fasta", "509_ATP5F1C.fasta", "498_ATP5F1A.fasta", 
+              "2990_GUSB.fasta", "513_ATP5F1D.fasta", "514_ATP5F1E.fasta", "3251_HPRT1.fasta", "7037_TFRC.fasta", 
+              "1213_CLTC.fasta", "5478_PPIA.fasta", "7316_UBC.fasta", "6908_TBP.fasta", "6389_SDHA.fasta", 
+              "11079_RER1.fasta", "23521_RPL13A.fasta", "6155_RPL27.fasta", "567_B2M.fasta", "6175_RPLP0.fasta"),
+  p_value = c(0, 0, 1.55344356264057E-185, 5.16224093579391E-158, 2.25688164935431E-50, 1.12997873210087E-34, 
+              1.18822155424025E-16, 5.11958019974763E-15, 1.09087615047464E-14, 1.33820722037461E-11, 
+              3.48846657968584E-07, 0.000318910197836425, 0.000754131043802346, 0.00174621054621951, 
+              0.0405574476052042, 0.0949114185334989, 0.0979724989473813, 0.195432324996015, 0.509959202005469, 1),
+  category = "Housekeeping"
+)
+
+#Combine the two datasets
+combined_data = rbind(dna_repair_genes, housekeeping_genes)
+
+#Replace 0 p-values with a very small number
+combined_data$p_value[combined_data$p_value == 0] <- 1e-300
+
+#Extract gene names from seqfile
+combined_data$gene = sub(".*_(.*)\\.fasta", "\\1", combined_data$seqfile)
+
+#Calculate the negative log10 p-values
+combined_data$neg_log_p_value = -log10(combined_data$p_value)
+
+#Generate  dot plot
+p = ggplot(combined_data, aes(x=category, y=neg_log_p_value, color=category)) +
+  geom_jitter(width=0.2, height=0, size=3, alpha=0.7) +
+  scale_y_continuous(limits=c(0, max(combined_data$neg_log_p_value, na.rm=TRUE) + 10), expand=c(0.1, 0.1)) +
+  scale_color_manual(values=c("DNA Repair"="#6a0dad", "Housekeeping"="#008080")) + 
+  labs(title="Comparison of p-values between DNA Repair and Housekeeping Genes",
+       y="-log10(p-value)") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size=14, face="bold", angle = 0, hjust = 0.5), 
+    axis.text.y = element_text(size=10), 
+    axis.title.x = element_blank(),
+    legend.position="none",
+    plot.title = element_text(face="bold", hjust=0.5)
+  )
+
+#Print the plot
+print(p)
+
+```
+
+
+
+```{r}
+#Data for housekeeping genes
+housekeeping_genes <- data.frame(
+  seqfile = c("1213_CLTC.fasta", "3251_HPRT1.fasta", "60_ACTB.fasta", "6155_RPL27.fasta", "7037_TFRC.fasta",
+              "7316_UBC.fasta", "7534_YWHAZ.fasta", "509_ATP5F1C.fasta", "2990_GUSB.fasta", "498_ATP5F1A.fasta",
+              "513_ATP5F1D.fasta", "567_B2M.fasta", "514_ATP5F1E.fasta", "5478_PPIA.fasta", "6389_SDHA.fasta",
+              "11079_RER1.fasta", "23521_RPL13A.fasta", "5230_PGK1.fasta", "6175_RPLP0.fasta", "6908_TBP.fasta"),
+  p_value = c(0, 0, 0, 0, 0, 0, 0, 3.74351301297602E-207, 8.98850668652419E-197, 6.23646165464656E-83,
+              1.4436242646853E-52, 2.44150646800152E-33, 1.15158194016789E-14, 5.19988050197435E-05, 0.00778012836479884,
+              1, 1, 1, 1, 1),
+  category = "Housekeeping"
+)
+
+#Data for growth process genes
+growth_process_genes = data.frame(
+  seqfile = c("3479_IGF1.fasta", "3953_LEPR.fasta", "2690_GHR.fasta", "2308_FOXO1.fasta", "79068_FTO.fasta",
+              "3480_IGF1R.fasta", "3717_JAK2.fasta", "5170_PDPK1.fasta", "2691_GHRH.fasta", "3952_LEP.fasta",
+              "2693_GHSR.fasta", "207_AKT1.fasta", "5290_PIK3CA.fasta", "3481_IGF2.fasta", "3487_IGFBP4.fasta",
+              "3486_IGFBP3.fasta", "7350_UCP1.fasta", "26291_FGF21.fasta", "3482_IGF2R.fasta", "4160_MC4R.fasta"),
+  p_value = c(0, 0, 8.102295213E-315, 5.01750851619254E-244, 2.85142863233514E-224,
+              1.33116346104167E-203, 2.70791525015014E-181, 4.26105377825369E-82, 4.9091730762968E-80, 2.60275610494556E-60,
+              4.67883839472383E-52, 2.80487050821755E-50, 7.7156843419509E-48, 1.08108169972756E-35, 1.68052945874864E-32,
+              1.01494052477204E-21, 6.85387801150998E-07, 1, 1, 1),
+  category = "Growth Process"
+)
+
+#Combine the two datasets
+combined_data = rbind(housekeeping_genes, growth_hormone_genes)
+
+#Replace 0 p-values with a very small number 
+combined_data$p_value[combined_data$p_value == 0] = 1e-300
+
+#Extract gene names from seqfile
+combined_data$gene = sub(".*_(.*)\\.fasta", "\\1", combined_data$seqfile)
+
+#Calculate the negative log10 p-values
+combined_data$neg_log_p_value = -log10(combined_data$p_value)
+
+#Generate the dot plot
+p = ggplot(combined_data, aes(x=category, y=neg_log_p_value, color=category)) +
+  geom_jitter(width=0.2, height=0, size=3, alpha=0.7) +
+  scale_y_continuous(limits=c(0, max(combined_data$neg_log_p_value, na.rm=TRUE) + 10), expand=c(0.1, 0.1)) +
+  scale_color_manual(values=c("Housekeeping"="#008080", "Growth Process"="#FF6347")) + 
+  labs(title="Comparison of p-values between Growth Process and Housekeeping Genes",
+       y="-log10(p-value)") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size=14, face="bold", angle = 0, hjust = 0.5), 
+    axis.text.y = element_text(size=10), 
+    axis.title.x = element_blank(),
+    legend.position="none",
+    plot.title = element_text(face="bold", hjust=0.5)
+  )
+
+#Print the plot
+print(p)
+
+```
+
+
+

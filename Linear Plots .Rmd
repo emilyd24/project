@@ -1,0 +1,74 @@
+---
+title: "Linear Plots"
+output: html_document
+date: "2024-07-24"
+---
+
+```{r}
+library(ggplot2)
+
+#Define the slope and y-intercept
+slope = -0.000195254105025325
+y_intercept = 0.300365904239319
+
+#Create a data frame with x values and corresponding y values
+df = data.frame(x = seq(0, 100, by = 0.1))
+df$y = slope * df$x + y_intercept
+
+#Equation as text
+equation_text = paste0("Omega = ", round(slope, 8), "x + ", round(y_intercept, 8))
+
+#Plot the line using ggplot2
+ggplot(df, aes(x = x, y = y)) +
+  geom_line(color = "black") +
+  labs(title = "MSH3",
+       x = "Lifespan",
+       y = "Omega") +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(face = "bold", color = "black"),
+    axis.title = element_text(face = "bold", color = "black"),
+    axis.line = element_line(linewidth = 1, color = "black")
+  ) +
+  coord_cartesian(xlim = c(5, 100), ylim = c(min(df$y), max(df$y))) +
+  annotate("text", x = 80, y = max(df$y), label = equation_text, size = 5, color = "black", hjust = 1)
+
+```
+```{r}
+
+library(ggplot2)
+
+#Define the slope and y-intercept
+slope = 0.00839966225769784
+y_intercept = -0.496673759298492
+
+#Create a data frame with x values and corresponding y values
+df = data.frame(x = seq(0, 100, by = 0.1))
+df$y = slope * df$x + y_intercept
+
+#Equation as text
+equation_text = paste0("Omega = ", round(slope, 8), "x + ", round(y_intercept, 8))
+
+#Plot the line using ggplot2
+ggplot(df, aes(x = x, y = y)) +
+  geom_line(color = "black") +
+  labs(title = "MRE11",
+       x = "Lifespan",
+       y = "Omega") +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(face = "bold", color = "black"),
+    axis.title = element_text(face = "bold", color = "black"),
+    axis.line = element_line(linewidth = 1, color = "black")
+  ) +
+  coord_cartesian(xlim = c(5, 100), ylim = c(min(df$y), max(df$y))) +
+  annotate("text", x = 80, y = max(df$y), label = equation_text, size = 5, color = "black", hjust = 1)
+
+```
+```
+
+
